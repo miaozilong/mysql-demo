@@ -4,7 +4,6 @@ services:
     image: mysql:5.7 #mysql版本
     volumes:
       - /db/data:/var/lib/mysql
-#       - /db/my.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
     restart: always
     ports:
       - 3306:3306
