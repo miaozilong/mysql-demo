@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   db:
-    image: mysql:8.4.2 #mysql版本
+    image: mysql:8 #mysql版本
     volumes:
       - /db/data:/var/lib/mysql
     restart: always
