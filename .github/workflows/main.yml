@@ -1,0 +1,34 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+name: mysql-demo
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: copy docker-compose.yml
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_IP }} #云服务器的ip
+          username: ${{ secrets.SSH_USERNAME }} #云服务器的用户名
+          password: ${{ secrets.SSH_PASSWORD }} #云服务器的密码
+          port: ${{ secrets.SSH_PORT }}
+          source: docker-compose.yml
+          overwrite: true
+          target: ./mysql-demo
+      - name: deploy image
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_IP }} #云服务器的ip
+          username: ${{ secrets.SSH_USERNAME }} #云服务器的用户名
+          password: ${{ secrets.SSH_PASSWORD }} #云服务器的密码
+          script: |
+            cd mysql-demo
+            docker-compose pull
+            docker image prune -f
+            docker-compose up -d
